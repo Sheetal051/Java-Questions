@@ -69,3 +69,12 @@ public class ShapeTest {
         }
     }
 }
+
+Here's the output:
+Shape: Circle
+Area: 78.53981633974483
+Perimeter: 31.41592653589793
+
+Shape: Triangle
+Area: 6.0
+Perimeter: 18.0
