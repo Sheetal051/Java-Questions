@@ -1,0 +1,44 @@
+Q:Write a Java program that reads a set of integers from the user and stores them in a List. The program should then find the second largest and second smallest elements in the List.
+Ans:
+  import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    List<Integer> numbers = new ArrayList<>();
+
+    System.out.println("Enter a set of integers (separated by spaces):");
+    String input = scanner.nextLine();
+    String[] inputs = input.split(" ");
+
+    for (String str : inputs) {
+      int num = Integer.parseInt(str);
+      numbers.add(num);
+    }
+
+    if (numbers.size() < 2) {
+      System.out.println("Not enough elements to find second largest and second smallest.");
+      return;
+    }
+
+    Collections.sort(numbers);
+
+    int secondLargest = numbers.get(numbers.size() - 2);
+    int secondSmallest = numbers.get(1);
+
+    System.out.println("Second largest element: " + secondLargest);
+    System.out.println("Second smallest element: " + secondSmallest);
+  }
+}
+
+Output
+
+Enter a set of integers (separated by spaces):
+1 3 4 5 6 7 9
+Second largest element: 7
+Second smallest element: 3
+
+=== Code Execution Successful ===
