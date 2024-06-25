@@ -1,0 +1,40 @@
+Q:Write a Java programme that takes an integer from the user and throws an exception if it is negative.Demonstrate Exception handling of same program as solution.
+Ans:
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class NegativeNumberException {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            int number = getPositiveIntegerFromUser(scanner);
+            System.out.println("You entered a positive number: " + number);
+        } finally {
+            scanner.close(); // Close the scanner to avoid resource leaks
+        }
+    }
+
+    private static int getPositiveIntegerFromUser(Scanner scanner) {
+        while (true) {
+            try {
+                System.out.print("Enter an integer: ");
+                int number = scanner.nextInt();
+                if (number < 0) {
+                    throw new IllegalArgumentException("You entered a negative number");
+                }
+                return number;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
+                scanner.next(); // Consume the invalid input
+            }
+        }
+    }
+}
+
+OUTPUT:
+Enter an integer: Abc
+Invalid input. Please enter an integer.
+Enter an integer: -5
+Invalid input. Please enter an integer.
+Enter an integer: 7
+You entered a positive number: 7
