@@ -1,0 +1,229 @@
+Q:. Write a Java program that uses JDBC to implement a simple CRUD (create, read, update, delete) application. The program should allow users to add, view, update, and delete records in a MySQL database table.
+  Ans
+  import java.sql.*;
+import java.util.Scanner;
+
+public class CRUDApplication {
+    private static final String URL = "jdbc:mysql://localhost:3306/mydb";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "password";
+    private static final String TABLE_NAME = "employees";
+
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+            // Create a statement object
+            Statement stmt = conn.createStatement();
+
+            // Create the table if it doesn't exist
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), email VARCHAR(255))");
+
+            // Create a scanner object to read user input
+            Scanner scanner = new Scanner(System.in);
+
+            while (true) {
+                System.out.println("Choose an option:");
+                System.out.println("1. Add a new employee");
+                System.out.println("2. View all employees");
+                System.out.println("3. Update an employee");
+                System.out.println("4. Delete an employee");
+                System.out.println("5. Exit");
+
+                int option = scanner.nextInt();
+                scanner.nextLine(); // Consume newline left-over
+
+                switch (option) {
+                    case 1:
+                        addEmployee(conn, scanner);
+                        break;
+                    case 2:
+                        viewEmployees(conn);
+                        break;
+                    case 3:
+                        updateEmployee(conn, scanner);
+                        break;
+                    case 4:
+                        deleteEmployee(conn, scanner);
+                        break;
+                    case 5:
+                        System.out.println("Goodbye!");
+                        return;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing SQL statement: " + e.getMessage());
+        }
+    }
+
+    private static void addEmployee(Connection conn, Scanner scanner) {
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter employee email: ");
+        String email = scanner.nextLine();
+
+        try (PreparedStatement pstmt = conn.prepareStatement("INSERT INTO " + TABLE_NAME + " (name, email) VALUES (?,?)")) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.executeUpdate();
+
+            System.out.println("Employee added successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error adding employee: " + e.getMessage());
+        }
+    }
+
+    private static void viewEmployees(Connection conn) {
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_NAME)) {
+            System.out.println("Employees:");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                System.out.println("ID: " + id + ", Name: " + name + ", Email: " + email);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error viewing employees: " + e.getMessage());
+        }
+    }
+
+    private static void updateEmployee(Connection conn, Scanner scanner) {
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline left-over
+        System.out.print("Enter new employee name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter new employee email: ");
+        String email = scanner.nextLine();
+
+        try (PreparedStatement pstmt = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET name =?, email =? WHERE id =?")) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Employee updated successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error updating employee: " + e.getMessage());
+        }
+    }
+
+    private static void deleteEmployee(Connection conn, Scanner scanner) {
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+
+        try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE id =?")) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Employee deleted successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error deleting employee: " + e.getMessage());
+        }
+    }
+}
+
+output
+ Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+1
+Enter employee name: John Doe
+Enter employee email: john.doe@example.com
+Employee added successfully!
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+2
+Employees:
+ID: 1, Name: John Doe, Email: john.doe@example.com
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+1
+Enter employee name: Jane Doe
+Enter employee email: jane.doe@example.com
+Employee added successfully!
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+2
+Employees:
+ID: 1, Name: John Doe, Email: john.doe@example.com
+ID: 2, Name: Jane Doe, Email: jane.doe@example.com
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+3
+Enter employee ID: 1
+Enter new employee name: John Smith
+Enter new employee email: john.smith@example.com
+Employee updated successfully!
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+2
+Employees:
+ID: 1, Name: John Smith, Email: john.smith@example.com
+ID: 2, Name: Jane Doe, Email: jane.doe@example.com
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+4
+Enter employee ID: 2
+Employee deleted successfully!
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+2
+Employees:
+ID: 1, Name: John Smith, Email: john.smith@example.com
+
+Choose an option:
+1. Add a new employee
+2. View all employees
+3. Update an employee
+4. Delete an employee
+5. Exit
+
+5
+Goodbye! 
