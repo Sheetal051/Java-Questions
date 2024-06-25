@@ -1,0 +1,58 @@
+Q:Write a Java program that connects to a MySQL database using JDBC. The program should read data from a table and display the results in the console
+Ans:
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class MySQLJDBCExample {
+    public static void main(String[] args) {
+        // Database connection settings
+        String url = "jdbc:mysql://localhost:3306/mydatabase";
+        String username = "root";
+        String password = "password";
+        String tableName = "mytable";
+
+        try {
+            // Load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish a connection to the database
+            Connection conn = DriverManager.getConnection(url, username, password);
+
+            // Create a statement to execute a query
+            Statement stmt = conn.createStatement();
+
+            // Execute a query to retrieve data from the table
+            String query = "SELECT * FROM " + tableName;
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            // Display the results in the console
+            System.out.println("ID\tName\tEmail");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+
+                System.out.println(id + "\t" + name + "\t" + email);
+            }
+
+            // Close the resources
+            resultSet.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+output
+  ID  Name    Email
+1   John    john@example.com
+2   Jane    jane@example.com
+3   Bob     bob@example.com
