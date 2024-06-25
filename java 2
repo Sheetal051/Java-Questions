@@ -1,0 +1,70 @@
+Q:Write a Java program to invoke parent class constructor from a child class. Create Child class object and parent class constructor must be invoked. Demonstrate by writing a program. Also explain key points about Constructor.
+Ans:
+Here is a Java program that demonstrates how to invoke a parent class constructor from a child class:
+
+// Parent class
+class Animal {
+    String name;
+
+    // Parent class constructor
+    Animal(String name) {
+        this.name = name;
+        System.out.println("Animal constructor called");
+    }
+
+    void eat() {
+        System.out.println(name + " is eating");
+    }
+}
+
+// Child class
+class Dog extends Animal {
+    int age;
+
+    // Child class constructor
+    Dog(String name, int age) {
+        // Invoke parent class constructor using super()
+        super(name);
+        this.age = age;
+        System.out.println("Dog constructor called");
+    }
+
+    void bark() {
+        System.out.println("Woof!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create a Dog object
+        Dog myDog = new Dog("Fido", 3);
+
+        // Call methods on the Dog object
+        myDog.eat();
+        myDog.bark();
+    }
+}
+
+
+Here's the output:
+Animal constructor called
+Dog constructor called
+Fido is eating
+Woof!
+
+Key points about Constructors:
+
+Constructors are special methods: Constructors are used to initialize objects when they are created. They have the same name as the class and no return type, not even void.
+
+Constructors are called when an object is created: When you create an object using the new keyword, the constructor is called to initialize the object.
+
+Constructors can take arguments: Constructors can take arguments, which are used to initialize the object's fields.
+
+Super() is used to invoke parent class constructor: In a child class, you can use the super() keyword to invoke the parent class constructor. This is useful when you want to initialize the parent class fields before initializing the child class fields.
+
+Constructors are not inherited: Constructors are not inherited by child classes. Each class has its own constructor, which is responsible for initializing its own fields.
+
+Default constructor: If you don't define a constructor in a class, the Java compiler will provide a default constructor that takes no arguments. This default constructor is called the "no-arg constructor".
+
+Constructor chaining: When you create an object, the constructors are called in a chain, starting from the parent class constructor and moving down to the child class constructor. This is known as constructor chaining. 
+  
