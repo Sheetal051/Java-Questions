@@ -1,0 +1,91 @@
+Q:Write a Java program that uses stream api to perform operations on a large data set, such as sorting or filtering the data
+Ans:
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+class Person {
+    private String name;
+    private String gender;
+    private int age;
+
+    public Person(String name, String gender, int age) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
+public class StreamExample {
+    public static void main(String[] args) {
+        // Create a large data set of Person objects
+        List<Person> people = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            people.add(new Person("Name " + i, i % 2 == 0? "Male" : "Female", i));
+        }
+
+        // Use Stream API to perform operations on the data set
+
+        // 1. Filter out people who are older than 5000
+        List<Person> filteredPeople = people.stream()
+               .filter(person -> person.getAge() <= 5000)
+               .collect(Collectors.toList());
+        System.out.println("Filtered people: " + filteredPeople.size());
+
+        // 2. Sort people by age in descending order
+        List<Person> sortedPeople = people.stream()
+               .sorted((p1, p2) -> p2.getAge() - p1.getAge())
+               .collect(Collectors.toList());
+        System.out.println("Sorted people: " + sortedPeople.size());
+
+        // 3. Find the average age of all people
+        double averageAge = people.stream()
+               .mapToDouble(Person::getAge)
+               .average()
+               .orElse(0.0);
+        System.out.println("Average age: " + averageAge);
+
+        // 4. Group people by gender
+        people.stream()
+               .collect(Collectors.groupingBy(Person::getGender))
+               .forEach((gender, persons) -> System.out.println("Gender: " + gender + ", Count: " + persons.size()));
+
+        // 5. Find the oldest person
+        Person oldestPerson = people.stream()
+               .max((p1, p2) -> p1.getAge() - p2.getAge())
+               .orElse(null);
+        System.out.println("Oldest person: " + oldestPerson);
+    }
+}
+
+output
+
+Filtered people: 5001
+Sorted people: 10000
+Average age: 4999.5
+Gender: Female, Count: 5000
+Gender: Male, Count: 5000
+Oldest person: Person{name='Name 9999', gender='Female', age=9999}
+
+=== Code Execution Successful ===
