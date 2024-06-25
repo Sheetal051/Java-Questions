@@ -1,0 +1,84 @@
+Q:Write a Java program that implements a producer-consumer model using multithreading. The program should have a producer thread that generates random numbers and adds them to a queue, and a consumer thread that reads numbers from the queue and calculates their sum. The program should use synchronization to ensure that the queue is accessed by only one thread at a time
+Ans:
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+class Producer extends Thread {
+  private BlockingQueue<Integer> queue;
+  private int maxNumbers;
+
+  public Producer(BlockingQueue<Integer> queue, int maxNumbers) {
+    this.queue = queue;
+    this.maxNumbers = maxNumbers;
+  }
+
+  public void run() {
+    for (int i = 0; i < maxNumbers; i++) {
+      int number = (int) (Math.random() * 100); // generate a random number between 0 and 99
+      try {
+        queue.put(number); // add the number to the queue
+        System.out.println("Produced: " + number);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}
+
+class Consumer extends Thread {
+  private BlockingQueue<Integer> queue;
+
+  public Consumer(BlockingQueue<Integer> queue) {
+    this.queue = queue;
+  }
+
+  public void run() {
+    int sum = 0;
+    while (true) {
+      try {
+        int number = queue.take(); // take a number from the queue
+        sum += number;
+        System.out.println("Consumed: " + number + ", Sum: " + sum);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+    BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(10); // create a queue with a capacity of 10
+
+    Producer producer = new Producer(queue, 20); // create a producer that generates 20 numbers
+    Consumer consumer = new Consumer(queue); // create a consumer that consumes numbers from the queue
+
+    producer.start(); // start the producer thread
+    consumer.start(); // start the consumer thread
+  }
+}
+
+output
+Consumed: 38, Sum: 253
+Produced: 9
+Consumed: 89, Sum: 342
+Produced: 57
+Consumed: 34, Sum: 376
+Produced: 65
+Consumed: 2, Sum: 378
+Produced: 7
+Consumed: 97, Sum: 475
+Produced: 46
+Consumed: 81, Sum: 556
+Produced: 0
+Consumed: 31, Sum: 587
+Produced: 78
+Consumed: 4, Sum: 591
+Consumed: 35, Sum: 626
+Consumed: 9, Sum: 635
+Consumed: 57, Sum: 692
+Consumed: 65, Sum: 757
+Consumed: 7, Sum: 764
+Consumed: 46, Sum: 810
+Consumed: 0, Sum: 810
+Consumed: 78, Sum: 888
