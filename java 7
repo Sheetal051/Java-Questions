@@ -1,0 +1,50 @@
+Q:Create a Java program that implements a binary search algorithm. The program should accept user input for the target value and search for it in a sorted array. The program should return the index of the target value if found or a message if not found.
+Ans:
+import java.util.Scanner;
+
+public class BinarySearch {
+  public static void main(String[] args) {
+    int[] arr = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91}; // sorted array
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.print("Enter the target value: ");
+    int target = scanner.nextInt();
+
+    int result = binarySearch(arr, target);
+
+    if (result == -1) {
+      System.out.println("Target value not found in the array.");
+    } else {
+      System.out.println("Target value found at index " + result);
+    }
+  }
+
+  public static int binarySearch(int[] arr, int target) {
+    int low = 0;
+    int high = arr.length - 1;
+
+    while (low <= high) {
+      int mid = (low + high) / 2;
+
+      if (arr[mid] == target) {
+        return mid;
+      } else if (arr[mid] < target) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    return -1; // not found
+  }
+}
+
+output
+ Enter the target value: 38
+Target value found at index 6
+
+
+  Enter the target value: 42
+Target value not found in the array.
+
+  === Code Execution Successful ===
