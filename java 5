@@ -1,0 +1,98 @@
+Q:Demonstrate the difference between abstract class and interface by writing programs as well as in keypoints.
+Ans:
+Here are the demonstrations of abstract class and interface in Java, along with their key points:
+
+Abstract Class:
+  // Abstract class
+abstract class Animal {
+    abstract void sound();
+
+    void eat() {
+        System.out.println("Eating...");
+    }
+}
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Woof!");
+    }
+}
+
+class Cat extends Animal {
+    void sound() {
+        System.out.println("Meow!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound(); // Woof!
+        dog.eat(); // Eating...
+
+        Cat cat = new Cat();
+        cat.sound(); // Meow!
+        cat.eat(); // Eating...
+    }
+}
+
+
+Output :
+Woof!
+Eating...
+Meow!
+Eating...
+
+  
+Interface:
+
+// Interface
+interface Flyable {
+    void fly();
+}
+
+class Bird implements Flyable {
+    public void fly() {
+        System.out.println("Flying...");
+    }
+}
+
+class Airplane implements Flyable {
+    public void fly() {
+        System.out.println("Soaring...");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Bird bird = new Bird();
+        bird.fly(); // Flying...
+
+        Airplane airplane = new Airplane();
+        airplane.fly(); // Soaring...
+    }
+}  
+
+Output:
+
+Flying...
+Soaring...
+
+
+Key Points:
+
+Abstract Class:
+
+An abstract class can have both abstract and non-abstract methods.
+A class can extend only one abstract class.
+Abstract classes can have state (member variables).
+Abstract classes can provide a default implementation for methods.
+Abstract classes are used when there is a clear "is-a" relationship between classes.
+
+Interface:
+
+An interface can only have abstract methods (until Java 8).
+A class can implement multiple interfaces.
+Interfaces cannot have state (member variables).
+Interfaces cannot provide a default implementation for methods (until Java 8).
+Interfaces are used when there is a clear "has-a" or "can-do" relationship between classes.
