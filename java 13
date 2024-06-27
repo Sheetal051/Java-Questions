@@ -1,0 +1,66 @@
+Q:. Create a Java program that connects to a PostgreSQL database and executes a batch update. The program should read the input data from a file and insert it into the database using JDBC batch updates.
+  Ans:
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class BatchUpdate {
+
+    private static final String URL = "jdbc:postgresql://localhost:5432/mydb";
+    private static final String USERNAME = "myuser";
+    private static final String PASSWORD = "mypassword";
+    private static final String FILE_NAME = "input.txt";
+
+    public static void main(String[] args) {
+        try {
+            Class.forName("org.postgresql.Driver"); // Load PostgreSQL JDBC driver
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error loading PostgreSQL JDBC driver: " + e.getMessage());
+            return;
+        }
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO mytable (column1, column2) VALUES (?, ?)")) {
+
+            connection.setAutoCommit(false);
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+                String line;
+                int count = 0;
+                while ((line = reader.readLine()) != null) {
+                    String[] values = line.split(",");
+                    if (values.length != 2) {
+                        System.out.println("Invalid input format: " + line);
+                        continue;
+                    }
+                    preparedStatement.setString(1, values[0]);
+                    preparedStatement.setString(2, values[1]);
+                    preparedStatement.addBatch();
+                    count++;
+
+                    if (count % 100 == 0) {
+                        preparedStatement.executeBatch();
+                    }
+                }
+
+                preparedStatement.executeBatch();
+            }
+
+            connection.commit();
+
+            System.out.println("Batch update executed successfully.");
+
+        } catch (SQLException e) {
+            System.out.println("Error executing batch update: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+}
+
+output:
+1  Batch update executed successfully.
