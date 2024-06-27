@@ -1,0 +1,35 @@
+Q:Create a Java servlet that reads the name of the user from a form and displays a welcome message on the web page. The servlet should use the GET method to read the input data from the user.
+  Ans:
+WelcomeServlet.java
+  import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class WelcomeServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        String name = request.getParameter("name");
+        out.println("<html><body>");
+        out.println("<h1>Welcome, " + name + "!</h1>");
+        out.println("</body></html>");
+    }
+}
+
+index.html
+  <html>
+  <body>
+    <form action="welcome" method="get">
+      <label for="name">Enter your name:</label>
+      <input type="text" id="name" name="name"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+
+  output:
+<html>
+  <body>
+    <h1>Welcome, John!</h1>
+  </body>
+</html>
